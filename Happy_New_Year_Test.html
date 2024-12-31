@@ -1,0 +1,196 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy New Year!</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #000;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            overflow: hidden;
+        }
+        #container {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        #countdown-timer {
+            font-size: 48px;
+            color: white;
+            text-shadow: 0 0 10px white;
+        }
+        #happy-new-year {
+            font-size: 64px;
+            font-weight: bold;
+            color: white;
+            text-shadow: 0 0 10px #fff, 0 0 20px #ff00ff, 0 0 30px #ff00ff;
+        }
+        #progress-bar-container {
+            width: 100%;
+            height: 10px;
+            background: #555;
+            margin-top: 10px;
+        }
+        #progress-bar {
+            width: 0;
+            height: 100%;
+            background: #4caf50;
+        }
+        .crack {
+            position: absolute;
+            width: 10px;
+            height: 100px;
+            background: white;
+            animation: growCrack 5s linear infinite;
+        }
+        @keyframes growCrack {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.5); }
+        }
+        @keyframes fade-out {
+            from { opacity: 1; transform: scale(1); }
+            to { opacity: 0; transform: scale(2); }
+        }
+        textarea {
+            margin-top: 20px;
+            width: 80%;
+            height: 50px;
+            border: 2px solid #4caf50;
+            border-radius: 8px;
+            padding: 10px;
+        }
+        button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            color: white;
+            background: #4caf50;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #45a049;
+        }
+        #wish-list p {
+            color: white;
+        }
+        audio {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <h1 id="happy-new-year" style="display:none;">HAPPY NEW YEAR!</h1>
+        <div id="countdown-timer">Testing Countdown Timer: 0h 0m 10s</div>
+        <div id="progress-bar-container">
+            <div id="progress-bar"></div>
+        </div>
+        <textarea id="new-year-wish" placeholder="Write your New Year wish here..."></textarea>
+        <button onclick="submitWish()">Submit Wish</button>
+        <div id="wish-list"></div>
+        <h2 id="greeting-message" style="color: white;"></h2>
+        <audio id="celebration-music" src="your-music-file.mp3"></audio>
+    </div>
+    <script>
+        const messages = [
+            "Happy New Year!",
+            "Wishing you all the best!",
+            "Cheers to 2024!",
+            "Celebrate with joy and love!",
+        ];
+        let messageIndex = 0;
+        let secondsLeft = 10; // For testing, start with 10 seconds
+
+        function updateCountdown() {
+            const countdownTimer = document.getElementById("countdown-timer");
+            const minutes = Math.floor(secondsLeft / 60);
+            const seconds = secondsLeft % 60;
+            countdownTimer.innerText = `Testing Countdown Timer: 0h ${minutes}m ${seconds}s`;
+
+            // Update progress bar
+            const totalSeconds = 10; // Testing total countdown duration
+            const progress = document.getElementById("progress-bar");
+            const percentage = ((totalSeconds - secondsLeft) / totalSeconds) * 100;
+            progress.style.width = `${percentage}%`;
+
+            if (secondsLeft === 10) {
+                createCracks();
+            }
+
+            if (secondsLeft === 5) {
+                changeCrackColors();
+            }
+
+            if (secondsLeft === 1) {
+                countdownTimer.style.display = "none";
+                const greeting = document.getElementById("greeting-message");
+                greeting.innerText = "I tried my best";
+                setTimeout(() => {
+                    greeting.innerText = "";
+                    countdownTimer.style.display = "block";
+                }, 2000);
+            }
+
+            if (secondsLeft === 0) {
+                playMusic();
+                main();
+                clearInterval(countdownInterval);
+            }
+
+            secondsLeft--;
+        }
+
+        function createCracks() {
+            const body = document.body;
+            for (let i = 0; i < 10; i++) {
+                const crack = document.createElement("div");
+                crack.classList.add("crack");
+                crack.style.top = `${Math.random() * window.innerHeight}px`;
+                crack.style.left = `${Math.random() * window.innerWidth}px`;
+                body.appendChild(crack);
+            }
+        }
+
+        function changeCrackColors() {
+            const cracks = document.querySelectorAll(".crack");
+            cracks.forEach(crack => {
+                setInterval(() => {
+                    crack.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
+                }, 500);
+            });
+        }
+
+        function submitWish() {
+            const wish = document.getElementById("new-year-wish").value;
+            const wishList = document.getElementById("wish-list");
+            const newWish = document.createElement("p");
+            newWish.innerText = wish;
+            wishList.appendChild(newWish);
+            document.getElementById("new-year-wish").value = "";
+        }
+
+        function playMusic() {
+            const music = document.getElementById("celebration-music");
+            music.play();
+        }
+
+        function main() {
+            const happyNewYear = document.getElementById("happy-new-year");
+            happyNewYear.style.display = "block";
+        }
+
+        const countdownInterval = setInterval(updateCountdown, 1000);
+    </script>
+</body>
+</html>
